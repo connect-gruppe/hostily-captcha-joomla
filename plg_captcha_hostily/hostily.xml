@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<extension type="plugin" group="captcha" method="upgrade">
+	<name>plg_captcha_hostily</name>
+	<version>0.1.1</version>
+	<creationDate>2026-10</creationDate>
+	<author>hostily</author>
+	<authorUrl>https://captcha.hostily.de</authorUrl>
+	<copyright>(C) 2026 hostily</copyright>
+	<license>GNU General Public License version 2 or later; see LICENSE</license>
+	<description>PLG_CAPTCHA_HOSTILY_XML_DESCRIPTION</description>
+	<namespace path="src">Hostily\Plugin\Captcha\Hostily</namespace>
+	<files>
+		<folder plugin="hostily">services</folder>
+		<folder>src</folder>
+		<filename>LICENSE</filename>
+	</files>
+	<languages folder="language">
+		<language tag="en-GB">en-GB/plg_captcha_hostily.ini</language>
+		<language tag="en-GB">en-GB/plg_captcha_hostily.sys.ini</language>
+		<language tag="de-DE">de-DE/plg_captcha_hostily.ini</language>
+		<language tag="de-DE">de-DE/plg_captcha_hostily.sys.ini</language>
+	</languages>
+	<config>
+		<fields name="params">
+			<fieldset name="basic">
+				<field
+					name="site_key"
+					type="text"
+					label="PLG_CAPTCHA_HOSTILY_SITE_KEY_LABEL"
+					description="PLG_CAPTCHA_HOSTILY_SITE_KEY_DESC"
+					filter="string"
+					size="30"
+				/>
+				<field
+					name="secret"
+					type="password"
+					label="PLG_CAPTCHA_HOSTILY_SECRET_LABEL"
+					description="PLG_CAPTCHA_HOSTILY_SECRET_DESC"
+					autocomplete="off"
+					filter="string"
+					size="30"
+				/>
+				<field
+					name="service_url"
+					type="url"
+					label="PLG_CAPTCHA_HOSTILY_SERVICE_URL_LABEL"
+					description="PLG_CAPTCHA_HOSTILY_SERVICE_URL_DESC"
+					default="https://captcha.hostily.de"
+					filter="url"
+					validate="url"
+					size="40"
+				/>
+				<field
+					name="mode"
+					type="list"
+					label="PLG_CAPTCHA_HOSTILY_MODE_LABEL"
+					description="PLG_CAPTCHA_HOSTILY_MODE_DESC"
+					default="sichtbar"
+					validate="options"
+					>
+					<option value="sichtbar">PLG_CAPTCHA_HOSTILY_MODE_VISIBLE</option>
+					<option value="unsichtbar">PLG_CAPTCHA_HOSTILY_MODE_INVISIBLE</option>
+				</field>
+				<field
+					name="language"
+					type="list"
+					label="PLG_CAPTCHA_HOSTILY_LANGUAGE_LABEL"
+					description="PLG_CAPTCHA_HOSTILY_LANGUAGE_DESC"
+					default="auto"
+					validate="options"
+					>
+					<option value="auto">PLG_CAPTCHA_HOSTILY_LANGUAGE_AUTO</option>
+					<option value="de">PLG_CAPTCHA_HOSTILY_LANGUAGE_DE</option>
+					<option value="en">PLG_CAPTCHA_HOSTILY_LANGUAGE_EN</option>
+				</field>
+				<field
+					name="on_error"
+					type="list"
+					label="PLG_CAPTCHA_HOSTILY_ON_ERROR_LABEL"
+					description="PLG_CAPTCHA_HOSTILY_ON_ERROR_DESC"
+					default="pass"
+					validate="options"
+					>
+					<option value="pass">PLG_CAPTCHA_HOSTILY_ON_ERROR_PASS</option>
+					<option value="block">PLG_CAPTCHA_HOSTILY_ON_ERROR_BLOCK</option>
+				</field>
+			</fieldset>
+		</fields>
+	</config>
+	<updateservers>
+		<server type="extension" priority="1" name="hostily Captcha">https://captcha.hostily.de/downloads/joomla-update.xml</server>
+	</updateservers>
+</extension>
