@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <extension type="plugin" group="captcha" method="upgrade">
 	<name>plg_captcha_hostily</name>
-	<version>0.1.1</version>
+	<version>0.2.0</version>
 	<creationDate>2026-10</creationDate>
 	<author>hostily</author>
 	<authorUrl>https://captcha.hostily.de</authorUrl>
@@ -58,9 +58,24 @@
 					default="sichtbar"
 					validate="options"
 					>
+					<option value="portal">PLG_CAPTCHA_HOSTILY_MODE_PORTAL</option>
 					<option value="sichtbar">PLG_CAPTCHA_HOSTILY_MODE_VISIBLE</option>
 					<option value="unsichtbar">PLG_CAPTCHA_HOSTILY_MODE_INVISIBLE</option>
+					<option value="halten">PLG_CAPTCHA_HOSTILY_MODE_HOLD</option>
+					<option value="schieben">PLG_CAPTCHA_HOSTILY_MODE_SLIDE</option>
 				</field>
+				<field
+					name="hold_time"
+					type="number"
+					label="PLG_CAPTCHA_HOSTILY_HOLD_TIME_LABEL"
+					description="PLG_CAPTCHA_HOSTILY_HOLD_TIME_DESC"
+					default="1500"
+					min="800"
+					max="3000"
+					step="100"
+					filter="integer"
+					showon="mode:halten"
+				/>
 				<field
 					name="language"
 					type="list"

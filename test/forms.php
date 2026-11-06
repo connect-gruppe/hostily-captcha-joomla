@@ -100,6 +100,26 @@ check(str_contains($html, '<hostily-captcha') && str_contains($html, 'data-site-
 check(str_contains($html, $stub . '/widget/hostily-captcha.js'), 'Kontakt: Widget-Skript des Dienstes eingebunden');
 check(str_contains($html, 'data-api="' . $stub . '/api/"') && str_contains($html, 'data-modus="sichtbar"') && str_contains($html, 'data-sprache="en"'), 'Kontakt: data-api, data-modus, data-sprache (Seitensprache en-GB)');
 check(!str_contains($html, 'testsecret'), 'Kontakt: Secret steht nicht im HTML');
+check(preg_match('/<hostily-captcha[^>]*aria-labelledby="([^"]+)"/', $html, $lm) === 1 && preg_match('/<label[^>]*id="' . preg_quote($lm[1], '/') . '"/', $html) === 1, 'Kontakt: Widget per aria-labelledby mit der Beschriftung verknuepft');
+// Alle fuenf Werte speichern/laden und im HTML; Altwert (leer/unbekannt) bleibt sichtbar
+foreach (['sichtbar', 'unsichtbar', 'halten', 'schieben'] as $m) {
+    setze('mode=' . $m);
+    [, $hm] = http('GET', $base . '/index.php?option=com_contact&view=contact&id=1');
+    check(str_contains($hm, 'data-modus="' . $m . '"'), "Modus $m: data-modus=\"$m\" im HTML");
+}
+setze('mode=portal');
+[, $hm] = http('GET', $base . '/index.php?option=com_contact&view=contact&id=1');
+check(str_contains($hm, '<hostily-captcha') && !str_contains($hm, 'data-modus'), 'Modus portal (Wie im Kundenportal): kein data-modus');
+setze('mode=');
+[, $hm] = http('GET', $base . '/index.php?option=com_contact&view=contact&id=1');
+check(str_contains($hm, 'data-modus="sichtbar"'), 'Altwert leer: wie bisher sichtbar');
+setze('mode=halten', 'hold_time=2000');
+[, $hm] = http('GET', $base . '/index.php?option=com_contact&view=contact&id=1');
+check(str_contains($hm, 'data-haltezeit="2000"'), 'halten + Haltezeit 2000 im HTML');
+setze('hold_time=99999');
+[, $hm] = http('GET', $base . '/index.php?option=com_contact&view=contact&id=1');
+check(str_contains($hm, 'data-haltezeit="3000"'), 'Haltezeit auf 3000 begrenzt');
+setze('mode=sichtbar', 'hold_time=1500');
 setze('mode=unsichtbar', 'language=de');
 [, $h2] = http('GET', $base . '/index.php?option=com_contact&view=contact&id=1');
 check(str_contains($h2, 'data-modus="unsichtbar"') && str_contains($h2, 'data-sprache="de"'), 'Einstellungen Modus unsichtbar / Sprache de wirken');

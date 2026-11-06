@@ -1,6 +1,6 @@
 # hostily Captcha für Joomla
 
-Plugin `plg_captcha_hostily/` (Version 0.1.1, GPL-2.0-or-later wie Joomla selbst; Voraussetzung für das Joomla Extensions Directory). Bindet den Spamschutz [hostily Captcha](https://captcha.hostily.de) als **Captcha-Plugin** über die
+Plugin `plg_captcha_hostily/` (Version 0.2.0, GPL-2.0-or-later wie Joomla selbst; Voraussetzung für das Joomla Extensions Directory). Bindet den Spamschutz [hostily Captcha](https://captcha.hostily.de) als **Captcha-Plugin** über die
 eingebaute Captcha-Schnittstelle von Joomla ein: Es erscheint in System → Konfiguration → Standard-Captcha neben den Captchas des Kerns und schützt damit
 automatisch alle Formulare, die Joomla selbst mit einem Captcha absichert.
 
@@ -11,7 +11,7 @@ PHP 8.2 und 8.3 (Container, `php -l` und Läufe) sowie 8.4 (`php -l` auf dem Hos
 ## Einbau (Betreiber)
 
 1. Im Dienst (captcha.hostily.de/verwaltung) ein Projekt anlegen; die **Domain der Joomla-Seite** in „erlaubte Domains“ eintragen.
-2. System → Erweiterungen → Installieren → **Paket hochladen**: `plg_captcha_hostily-0.1.1.zip` (Zip per `./bauen.sh`).
+2. System → Erweiterungen → Installieren → **Paket hochladen**: `plg_captcha_hostily-0.2.0.zip` (Zip per `./bauen.sh`).
 3. System → Plugins → „hostily Captcha“ **aktivieren** und öffnen: Site-Key und Secret eintragen, speichern.
 4. System → Konfiguration → **Standard-Captcha**: „hostily Captcha“ wählen und speichern. Komponenten, die eine eigene Wahl haben (Kontakte,
    Benutzer, Datenschutz), stehen auf „Standard verwenden“ oder werden dort ebenfalls auf hostily Captcha gestellt.
@@ -26,7 +26,8 @@ Konfiguration ein anderes Captcha wählen.
 |---|---|
 | Site-Key / Secret | aus dem Projekt im Dienst; das Secret bleibt auf dem Server (nie im HTML) |
 | Dienst-URL | Vorgabe `https://captcha.hostily.de` (eigene Installation möglich) |
-| Modus | sichtbar (Kästchen) oder unsichtbar (löst beim Absenden) |
+| Modus | „Wie im Kundenportal“ (kein Attribut), sichtbar (Kästchen, Vorgabe), unsichtbar, Gedrückt halten, Schieberegler. Die beiden letzten bieten immer die Alternative „Per Klick bestätigen“. Ein gespeicherter Altwert bleibt |
+| Haltezeit | 800–3000 ms, nur für „Gedrückt halten“ |
 | Sprache des Widgets | automatisch (Sprache der Seite: de oder en, sonst entscheidet das Widget), Deutsch, Englisch |
 | Bei Ausfall des Dienstes | **durchlassen** (Standard) oder **blockieren**; gilt auch bei falschem Secret (`invalid-input-secret`, `missing-input-secret`, `bad-request`), steht immer in `administrator/logs/plg_captcha_hostily.log.php` (nie mit Secret) |
 
@@ -78,6 +79,10 @@ Anbieter, 4.4 über die Ereignisse. Beim Absenden eines gelösten Widgets zu sch
 Dienstes, der Browsertest wartet daher vor dem Absenden. Der Browsertest meldet auf 4.4.14 einen JavaScript-Fehler `o.querySelector is not a function` in der Verwaltung,
 dessen Ursache nicht untersucht ist (das Plugin liefert in der Verwaltung kein Skript; die Prüfungen laufen trotzdem durch).
 
+## Änderungen 0.2.0
+
+* Neue Modi „Gedrückt halten“ und „Schieberegler“ (beide bieten immer die Alternative „Per Klick bestätigen“), „Wie im Kundenportal“ (kein Attribut) und optionale Haltezeit; ein gespeicherter Modus bleibt, neu eingerichtet ist „sichtbar“. Die Beschriftung des Feldes ist per `aria-labelledby` mit dem Widget verknüpft.
+
 ---
 
 ## English
@@ -86,7 +91,7 @@ hostily Captcha for Joomla: a captcha plugin (`plg_captcha_hostily`) that plugs 
 `onInit`/`onDisplay`/`onCheckAnswer` events on 4.4). It shows up under System → Global Configuration → Default Captcha and protects every core form that has a captcha field
 (see the table above: contact, user registration, privacy requests, and the other forms listed there).
 
-Install: System → Install → Extensions → upload `plg_captcha_hostily-0.1.1.zip` (built by `./bauen.sh`), enable the plugin under System → Plugins, enter site key and secret,
+Install: System → Install → Extensions → upload `plg_captcha_hostily-0.2.0.zip` (built by `./bauen.sh`), enable the plugin under System → Plugins, enter site key and secret,
 then select "hostily Captcha" as Default Captcha. Add your site's domain to the allowed domains of the project at captcha.hostily.de. On service failure visitors are let
 through by default (configurable: block); everything is logged to `administrator/logs/plg_captcha_hostily.log.php`. Without site key and secret nothing is protected.
 Tested on Joomla 4.4.14, 5.4.10 and 6.2.0.

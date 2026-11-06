@@ -29,7 +29,7 @@ use Joomla\Registry\Registry;
  */
 final class Client
 {
-    public const VERSION = '0.1.1';
+    public const VERSION = '0.2.0';
     public const TOKEN_FIELD = 'hostily-captcha-token';
     public const DEFAULT_URL = 'https://captcha.hostily.de';
     public const LOG_CATEGORY = 'plg_captcha_hostily';
@@ -98,7 +98,17 @@ final class Client
             . ($class !== '' ? ' class="' . $e($class) . '"' : '')
             . ' data-site-key="' . $e($this->setting('site_key')) . '"'
             . ' data-api="' . $e($this->serviceUrl() . '/api/') . '"'
-            . ' data-modus="' . ($this->setting('mode') === 'unsichtbar' ? 'unsichtbar' : 'sichtbar') . '"';
+            // Beschriftung (<label id="<id>-lbl"> von Joomla) mit dem Widget verknuepfen; ein fehlendes Ziel schadet nicht
+            . ($id !== '' ? ' aria-labelledby="' . $e($id . '-lbl') . '"' : '');
+        // "portal" (Wie im Kundenportal): kein Attribut. Leerer/unbekannter Altwert: sichtbar wie bisher.
+        $mode = $this->mode();
+        if ($mode !== 'portal') {
+            $html .= ' data-modus="' . $mode . '"';
+            $hold = (int) $this->setting('hold_time');
+            if ($mode === 'halten' && $hold > 0) {
+                $html .= ' data-haltezeit="' . max(800, min(3000, $hold)) . '"';
+            }
+        }
         if ($lang === 'de' || $lang === 'en') {
             $html .= ' data-sprache="' . $lang . '"';
         }
@@ -270,6 +280,16 @@ final class Client
         } catch (\Throwable $e) {
             // Protokollfehler duerfen das Formular nicht stoeren.
         }
+    }
+
+    /**
+     * Gespeicherter Modus: portal | sichtbar | unsichtbar | halten | schieben; alles andere gilt als sichtbar.
+     */
+    public function mode(): string
+    {
+        $mode = $this->setting('mode');
+
+        return \in_array($mode, ['portal', 'sichtbar', 'unsichtbar', 'halten', 'schieben'], true) ? $mode : 'sichtbar';
     }
 
     private function setting(string $name): string
